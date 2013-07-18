@@ -26,7 +26,7 @@ def mini_batch_kmeans(X, C, b, t):
             idxs[j] = np.argmin(((C - x)**2).sum(1)) # faster
         # idxs = np.argmin(pairwise_distances(C, X_batch), axis=0) # slower
 
-        # Update centers
+        # Update centers:
         for j, x in enumerate(X_batch):
             V[idxs[j]] += 1
             eta = 1.0 / V[idxs[j]]

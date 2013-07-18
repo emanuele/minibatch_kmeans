@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import pairwise_distances
 
 def kmeans(X, C):
     """The Loyd's algorithm for the k-centers problems.
@@ -49,10 +50,17 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
     return C
 
 
+def compute_labels(X, C):
+    """Compute the cluster labels for dataset X given centers C.
+    """
+    return np.argmin(pairwise_distances(C, X), axis=0)
+
+
 if __name__ == '__main__':
 
     from sklearn.datasets import make_blobs
     import matplotlib.pyplot as plt
+    from sklearn.metrics import adjusted_rand_score
 
     np.random.seed(1)
 
@@ -70,9 +78,9 @@ if __name__ == '__main__':
     C_init = X[:k]
     plt.plot(C_init[:,0], C_init[:,1], 'bo', markersize=10, label='initialization')
 
-    C = kmeans(X, C_init)
+    C_kmeans = kmeans(X, C_init)
 
-    plt.plot(C[:,0], C[:,1], 'ro', markersize=10, label='k-means')
+    plt.plot(C_kmeans[:,0], C_kmeans[:,1], 'ro', markersize=10, label='k-means')
 
     b = 50
     t = 10
@@ -91,9 +99,14 @@ if __name__ == '__main__':
 
     plt.legend(numpoints=1, loc='lower right')
 
+    labels_init = compute_labels(X, C_init)
+    labels_kmeans = compute_labels(X, C_kmeans)
+    labels_mbkm = compute_labels(X, C_mbkm)
+    labels_mbkm_wr = compute_labels(X, C_mbkm_wr)
+    print "Adjusted rand scores:"
+    print "labels_kmeans, labels_init =", adjusted_rand_score(labels_kmeans, labels_init)
+    print "labels_kmeans, labels_mbkm =", adjusted_rand_score(labels_kmeans, labels_mbkm)
+    print "labels_kmeans, labels_mbkm_wr =", adjusted_rand_score(labels_kmeans, labels_mbkm_wr)
+
     plt.show()
     
-
-
-
-

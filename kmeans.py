@@ -6,6 +6,7 @@ def kmeans(X, C):
     X : data matrix
     C : initial centers
     """
+    C = C.copy()
     V = np.zeros(C.shape[0])
     for x in X:
         idx = np.argmin(((C - x)**2).sum(1))
@@ -25,6 +26,7 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
     t : number of iterations
     replacement: whether to sample batches with replacement or not.
     """
+    C = C.copy()
     for i in range(t):
         # Sample a mini batch:
         if replacement:

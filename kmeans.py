@@ -23,6 +23,7 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
     C : initial centers
     b : size of the mini-batches
     t : number of iterations
+    replacement: whether to sample batches with replacement or not.
     """
     for i in range(t):
         # Sample a mini batch:

@@ -81,6 +81,12 @@ if __name__ == '__main__':
     C_mbkm_wr = mini_batch_kmeans(X, C_init, b=b, t=t, replacement=False)
     plt.plot(C_mbkm_wr[:,0], C_mbkm_wr[:,1], 'mo', markersize=10, label='mini-batch k-means w/o rep.')
 
+    # from sklearn.cluster import MiniBatchKMeans
+    # mbkm_skl = MiniBatchKMeans(n_clusters=k, max_iter=1, max_no_improvement=None, tol=0.0, batch_size=b, init=C_init, compute_labels=False)
+    # mbkm_skl.fit(X)
+    # C_mbkm_skl = mbkm_skl.cluster_centers_
+    # plt.plot(C_mbkm_skl[:,0], C_mbkm_skl[:,1], 'co', markersize=10, label='mini-batch k-means SKL')
+
     plt.legend(numpoints=1, loc='lower right')
 
     plt.show()

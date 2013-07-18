@@ -2,6 +2,11 @@ import numpy as np
 # from sklearn.metrics import pairwise_distances
 
 def kmeans(X, C):
+    """The Loyd's algorithm for the k-centers problems.
+
+    X : data matrix
+    C : initial centers
+    """
     V = np.zeros(C.shape[0])
     for x in X:
         # idx = np.argmin(((C - x)*(C - x)).sum(1)) # slower
@@ -15,6 +20,13 @@ def kmeans(X, C):
     
 
 def mini_batch_kmeans(X, C, b, t):
+    """The mini-batch k-means algorithms (Sculley et al. 2007).
+
+    X : data matrix
+    C : initial centers
+    b : size of the mini-batches
+    t : number of iterations
+    """
     for i in range(t):
         # Sample a mini batch:
         X_batch = X[np.random.permutation(X.shape[0])[:b]]

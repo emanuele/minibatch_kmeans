@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn.metrics import pairwise_distances
+from sklearn.neighbors import BallTree
+
 
 def kmeans(X, C):
     """The Loyd's algorithm for the k-centers problems.
@@ -19,7 +21,8 @@ def kmeans(X, C):
     
 
 def mini_batch_kmeans(X, C, b, t, replacement=True):
-    """The mini-batch k-means algorithms (Sculley et al. 2007).
+    """The mini-batch k-means algorithms (Sculley et al. 2007) for the
+    k-centers problem.
 
     X : data matrix
     C : initial centers
@@ -53,7 +56,10 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
 def compute_labels(X, C):
     """Compute the cluster labels for dataset X given centers C.
     """
-    return np.argmin(pairwise_distances(C, X), axis=0)
+    # labels = np.argmin(pairwise_distances(C, X), axis=0) # THIS REQUIRES TOO MUCH MEMORY FOR LARGE X
+    tree = BallTree(C)
+    labels = tree.query(X, k=1, return_distance=False).squeeze()
+    return labels
 
 
 if __name__ == '__main__':

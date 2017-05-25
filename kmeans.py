@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.metrics import pairwise_distances
-from sklearn.neighbors import BallTree
+from sklearn.neighbors import KDTree
 
 
 def kmeans(X, C):
@@ -16,9 +16,9 @@ def kmeans(X, C):
         V[idx] += 1
         eta = 1.0 / V[idx]
         C[idx] = (1.0 - eta) * C[idx] + eta * x
-        
+
     return C
-    
+
 
 def mini_batch_kmeans(X, C, b, t, replacement=True):
     """The mini-batch k-means algorithms (Sculley et al. 2007) for the
@@ -37,9 +37,9 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
             X_batch = X[np.random.permutation(X.shape[0])[:b]]
         else:
             X_batch = X[b*t:b*(t+1)]
-            
+
         V = np.zeros(C.shape[0])
-        idxs = np.empty(X_batch.shape[0])
+        idxs = np.empty(X_batch.shape[0], dtype=np.int)
         # Assign the closest centers without update for the whole batch:
         for j, x in enumerate(X_batch):
             idxs[j] = np.argmin(((C - x)**2).sum(1))
@@ -57,9 +57,18 @@ def compute_labels(X, C):
     """Compute the cluster labels for dataset X given centers C.
     """
     # labels = np.argmin(pairwise_distances(C, X), axis=0) # THIS REQUIRES TOO MUCH MEMORY FOR LARGE X
-    tree = BallTree(C)
+    tree = KDTree(C)
     labels = tree.query(X, k=1, return_distance=False).squeeze()
     return labels
+
+
+def compute_centroids(X, C):
+    """Compute the centroids for dataset X given centers C. Note: centers
+    C may not belong to X.
+    """
+    tree = KDTree(X)
+    centroids = tree.query(C, k=1, return_distance=False).squeeze()
+    return centroids
 
 
 if __name__ == '__main__':
@@ -74,7 +83,7 @@ if __name__ == '__main__':
     d = 2
     X, y = make_blobs(n, d, centers=3)
     plt.plot(X[:,0], X[:,1], 'ko')
-    
+
     k = 3
 
     # In case we want to permute the order of X:
@@ -115,4 +124,3 @@ if __name__ == '__main__':
     print "labels_kmeans, labels_mbkm_wr =", adjusted_rand_score(labels_kmeans, labels_mbkm_wr)
 
     plt.show()
-    

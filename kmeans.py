@@ -36,7 +36,7 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
         if replacement:
             X_batch = X[np.random.permutation(X.shape[0])[:b]]
         else:
-            X_batch = X[b*t:b*(t+1)]
+            X_batch = X[b*i:b*(i+1)]
 
         V = np.zeros(C.shape[0])
         idxs = np.empty(X_batch.shape[0], dtype=np.int)

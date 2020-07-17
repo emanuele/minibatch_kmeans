@@ -34,7 +34,7 @@ def mini_batch_kmeans(X, C, b, t, replacement=True):
     for i in range(t):
         # Sample a mini batch:
         if replacement:
-            X_batch = X[np.random.permutation(X.shape[0])[:b]]
+            X_batch = X[np.random.choice(X.shape[0], b, replace=True)]
         else:
             X_batch = X[b*i:b*(i+1)]
 
@@ -100,10 +100,10 @@ if __name__ == '__main__':
     b = 50
     t = 10
 
-    C_mbkm = mini_batch_kmeans(X, C_init, b=b, t=t, replacement=True)
+    C_mbkm = mini_batch_kmeans(X, C_init, b=b, t=t, replacement=False)
     plt.plot(C_mbkm[:,0], C_mbkm[:,1], 'go', markersize=10, label='mini-batch k-means')
 
-    C_mbkm_wr = mini_batch_kmeans(X, C_init, b=b, t=t, replacement=False)
+    C_mbkm_wr = mini_batch_kmeans(X, C_init, b=b, t=t, replacement=True)
     plt.plot(C_mbkm_wr[:,0], C_mbkm_wr[:,1], 'mo', markersize=10, label='mini-batch k-means w/o rep.')
 
     # from sklearn.cluster import MiniBatchKMeans
@@ -118,9 +118,9 @@ if __name__ == '__main__':
     labels_kmeans = compute_labels(X, C_kmeans)
     labels_mbkm = compute_labels(X, C_mbkm)
     labels_mbkm_wr = compute_labels(X, C_mbkm_wr)
-    print "Adjusted rand scores:"
-    print "labels_kmeans, labels_init =", adjusted_rand_score(labels_kmeans, labels_init)
-    print "labels_kmeans, labels_mbkm =", adjusted_rand_score(labels_kmeans, labels_mbkm)
-    print "labels_kmeans, labels_mbkm_wr =", adjusted_rand_score(labels_kmeans, labels_mbkm_wr)
+    print("Adjusted rand scores:")
+    print("labels_kmeans, labels_init =", adjusted_rand_score(labels_kmeans, labels_init))
+    print("labels_kmeans, labels_mbkm =", adjusted_rand_score(labels_kmeans, labels_mbkm))
+    print("labels_kmeans, labels_mbkm_wr =", adjusted_rand_score(labels_kmeans, labels_mbkm_wr))
 
     plt.show()
